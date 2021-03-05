@@ -13,6 +13,23 @@ console.log(countriesAndCodes)  // You don't need to log countriesAndCodes - jus
 
 // TODO when the page loads, select an element at random from the countriesAndCodes array
 
+var randomCountry;
+var countryData;
+
+async function generateRandomCountry() {
+    randomCountry = countriesAndCodes[Math.ceil(Math.random() * countriesAndCodes.length)];
+    randomCountryElement.textContent = randomCountry.name;
+   
+  let response = await fetch(`https://api.worldbank.org/v2/country/${randomCountry["alpha-2"]}?format=json`);
+  let data = await response.json();
+  countryData = data[1];
+}
+
+await generateRandomCountry();
+console.log(randomCountry)
+console.log(countryData)
+// https://api.worldbank.org/v2/country/AZ?format=json API link 
+
 // TODO display the country's name in the randomCountryElement 
 
 // TODO add a click event handler to the submitButton.  When the user clicks the button,
