@@ -19,24 +19,19 @@
 
     <p>Test your knowledge of geography. What's the capital city of this country?</p>
 
-    <h3 id="random-country">Country Placeholder</h3>
+    <h3 id="random-country"></h3>
 
+    <!-- Answer form, take input from the user to check the Capital City. -->
     <div class="input-group mb-3">
-        <input type="text" id="user-answer" class="form-control" placeholder="answer" aria-label="answer" aria-description="submit-answer">
+        <input type="text" id="user-answer" class="form-control" placeholder="Answer" aria-label="answer" aria-description="submit-answer">
         <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="button" id="submit-answer">Check Answer</button>
         </div>
     </div>
 
-    <h3 id="result">Replace with result</h3>
-
-    <!-- TODO add a Play Again button to select a new random country, 
-        clear the user answer and result, so the user can have another turn.  -->
     <h4 id="Answer-result">Were you correct?</h2>
+    <button hidden=true class="btn btn-outline-secondary" type="button" id="replay">Play Again?</button>
 
-    <div class="input-group mb-3">
-        <button class="btn btn-outline-secondary" type="button" id="replay">Play Again?</button>
-    </div>
 </div>
 </body>
 

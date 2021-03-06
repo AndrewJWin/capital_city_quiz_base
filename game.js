@@ -1,8 +1,8 @@
 let randomCountryElement = document.querySelector('#random-country')
 let userAnswerElement = document.querySelector("#user-answer")
 let submitButton = document.querySelector("#submit-answer")
-let resultTextElement = document.querySelector('#result')
-
+let resultTextElement = document.querySelector('#Answer-result')
+let replayButton = document.querySelector("#replay");
 // TODO finish the script to challenge the user about their knowledge of capital cities.
 // An array of country codes is provided in the countries.js file. 
 // Your browser treats all JavaScript files as one big file, o
@@ -21,30 +21,47 @@ async function generateRandomCountry() {
     randomCountryElement.textContent = randomCountry.name;
    
   let response = await fetch(`https://api.worldbank.org/v2/country/${randomCountry["alpha-2"]}?format=json`);
+  
+  // Check if the status is OK, if not - it's not ok,  Kowalski report!
+  if(response.status != 200) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  } else {
   let data = await response.json();
-  countryData = data[1];
+  countryData = data[1][0];
+  }
 }
 
-await generateRandomCountry();
-console.log(randomCountry)
-console.log(countryData)
-// https://api.worldbank.org/v2/country/AZ?format=json API link 
+// Generate a random country on page load.
+generateRandomCountry();
 
-// TODO display the country's name in the randomCountryElement 
+// Listen for the submit button being clicked.
+submitButton.addEventListener("click", () => {
+  // Check if the users answer is the same as the capital city, regardless of case.
+  if (userAnswerElement.value.toLowerCase() == countryData.capitalCity.toLowerCase()) {
+    console.log("Correct")
+    resultTextElement.textContent = `Correct! The Capital City of ${countryData.name} is ${countryData.capitalCity}.`
+    submitButton.disabled = true;
+    resultTextElement.hidden = false;
+    replayButton.hidden = false;
+  } else {
+    console.log("Incorrect");
+    submitButton.disabled = true;
+    resultTextElement.textContent = `Incorrect, the Capital City of ${countryData.name} was ${countryData.capitalCity}.`
+    resultTextElement.hidden = false;
+    replayButton.hidden = false;
+  }
+});
 
-// TODO add a click event handler to the submitButton.  When the user clicks the button,
-//  * read the text from the userAnswerElement 
-//  * Use fetch() to make a call to the World Bank API with the two-letter country code (from countriesAndCodes, example 'CN' or 'AF')
-//  * Verify no errors were encountered in the API call. If an error occurs, display an alert message. 
-//  * If the API call was successful, extract the capital city from the World Bank API response.
-//  * Compare it to the user's answer. 
-//      You can decide how correct you require the user to be. At the minimum, the user's answer should be the same
-//      as the World Bank data - make the comparison case insensitive.
-//      If you want to be more flexible, include and use a string similarity library such as https://github.com/hiddentao/fast-levenshtein 
-//  * Finally, display an appropriate message in the resultTextElement to tell the user if they are right or wrong. 
-//      For example "Correct! The capital of Germany is Berlin" or "Wrong - the capital of Germany is not G, it is Berlin"
-
-
-// TODO finally, connect the play again button. Clear the user's answer, select a new random country, 
-// display the country's name, handle the user's guess. If you didn't use functions in the code you've 
-// already written, you should refactor your code to use functions to avoid writing very similar code twice. 
+// Then listen for the replay button being clicked.
+replayButton.addEventListener("click", () => {
+  // In case the fetch task takes long. Make sure the user knows we're loading.
+  randomCountryElement.textContent = "Loading Country";
+  
+  // Force a country generation.
+  generateRandomCountry().then(() => {
+    userAnswerElement.value = "";
+    resultTextElement.textContent = "Were you correct?";
+    submitButton.disabled = false;
+    replayButton.hidden = true;
+  })
+})
