@@ -22,7 +22,7 @@ async function generateRandomCountry() {
    
   let response = await fetch(`https://api.worldbank.org/v2/country/${randomCountry["alpha-2"]}?format=json`);
   
-  // Check if the status is OK, if not - it's not ok,  Kowalski report!
+  // Check if the status is OK, if not - it's not ok,  Kowalski analysis!
   if(response.status != 200) {
     throw new Error(`HTTP error! status: ${response.status}`);
   } else {
